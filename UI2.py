@@ -109,9 +109,6 @@ class userGUI:
         mythread = Thread(target=self.receive)
         mythread.daemon = True
         mythread.start()
-        cryptoThread = Thread(target=self.setCrypto)
-    	cryptoThread.daemon = True
-    	cryptoThread.start()
         self.setButtonStatus(1)
 
     def disconnect(self):
@@ -200,22 +197,12 @@ class userGUI:
         else:
             self.client.tcpServer.send("NO") 
 
-    def getAlpha(self):
-        pass
-
     def changeKeys(self):
         self.changeClient = DH(int(self.alphaText.get()),int(self.primeText.get()))
         self.changeClient.setNumPrivado(self.numberPrivate)
         self.numberSend = self.changeClient.calcSendNumber()
         self.client.tcpServer.send("SYS "+str(self.numberSend)+" "+self.alphaText.get()+" "+self.primeText.get())
         
-        
-'''
-    def listenToChanges(self):
-    	while True:
-    		if self.chatDisplay.get(-1):
-   	'''	
-    
 if __name__ == '__main__':
     import sys  
     reload(sys)  
