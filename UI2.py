@@ -71,9 +71,10 @@ class userGUI:
         self.encrypButton = Button(self.frameLate)
         self.encrypButton.config(text="Mudar", width=12, command=self.changeKeys)
         self.encrypButton.pack(side=TOP)
-
+        
+        self.cryptography = "S-DES"
         self.encryption = StringVar()
-        self.encryption.set("S-DES")
+        self.encryption.set(self.cryptography)
 
         self.display = Label(self.frame2, text=self.encryption.get())
         self.display.config(fg="#000000")
@@ -118,14 +119,14 @@ class userGUI:
         self.setButtonStatus(0)
     
     def sendMsg(self):
-    	print(self.encryption.get())
+    	print(self.cryptography)
     	message = self.msgText.get()
-        if self.encryption.get() == "RC4":
+        if self.cryptography == "RC4":
             c = RC4()
             messageRC4 = c.run(message,self.keyR)
             self.client.sendMsg(messageRC4)
             
-        elif self.encryption.get() == "S-DES":
+        elif self.cryptography == "S-DES":
             c = SDES()
             messageSDES = c.run(message,self.keyS)
             self.client.sendMsg(messageSDES)
@@ -150,8 +151,9 @@ class userGUI:
             if not data:
                 break
             elif data.split(" ")[0] == "POSITIVE" or data.split(" ")[0] == "NEGATIVE":
-                self.encryption.set(data.split(" ")[1])
-                self.display.config(text=self.encryption.get())
+                self.cryptography = data.split(" ")[1]
+                self.encryption.set(self.cryptography)
+                self.display.config(text=self.cryptography)
             else:
                 identification = data.split()[0]
                 if identification == "RC4" or identification == "S-DES":
@@ -173,7 +175,7 @@ class userGUI:
                     self.keyS = str(self.keyS)
                     print(self.keyR,self.keyS)
                 else:
-                    if self.encryption.get() == "RC4":
+                    if self.cryptography == "RC4":
                         print(data)
                         dc = decRC4()
                         messageDEC = dc.run(data,self.keyR)
@@ -181,7 +183,7 @@ class userGUI:
                         self.chatDisplay.insert(END, messageDEC)
                         print(str(messageDEC+ "  --> ( RC4: "+data+" )"))
                         #self.chatDisplay.insert(END, str(data))
-                    elif self.encryption.get() == "S-DES":
+                    elif self.cryptography == "S-DES":
                         dc = decSDES()
                         messageDEC = dc.run(data, self.keyS)
                         print(messageDEC)
