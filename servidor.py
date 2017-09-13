@@ -36,11 +36,7 @@ class Server:
                     for connection in self.connections:
                         connection.send("POSITIVE "+self.encryption)
                     ans = 0
-            elif data == "RC4":
-                self.encryption = data
-                for connection in self.connections:
-                    connection.send(data)
-            elif data == "S-DES":
+            elif data == "RC4" or data == "S-DES":
                 self.encryption = data
                 for connection in self.connections:
                     connection.send(data)
